@@ -1,4 +1,4 @@
-package me.linkcube.fourdvedio.bluetooth;
+package me.linkcube.fourdvedio.core.bluetooth;
 
 import android.bluetooth.BluetoothDevice;
 

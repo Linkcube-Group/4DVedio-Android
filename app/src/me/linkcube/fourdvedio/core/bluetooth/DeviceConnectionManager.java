@@ -1,4 +1,4 @@
-package me.linkcube.fourdvedio.bluetooth;
+package me.linkcube.fourdvedio.core.bluetooth;
 
 import java.util.Timer;
 import java.util.TimerTask;

@@ -1,6 +1,6 @@
 package me.linkcube.fourdvedio.ui;
 
-import me.linkcube.fourdvedio.widget.AlertUtils;
+import me.linkcube.fourdvedio.utils.AlertUtils;
 import android.app.ProgressDialog;
 
 public class DialogActivity extends BaseActivity {

@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 
-import me.linkcube.fourdvedio.bluetooth.BluetoothUtils;
-import me.linkcube.fourdvedio.bluetooth.DeviceConnectionManager;
+import me.linkcube.fourdvedio.core.bluetooth.BluetoothUtils;
+import me.linkcube.fourdvedio.core.bluetooth.DeviceConnectionManager;
 import me.linkcube.fourdvedio.utils.Timber;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;

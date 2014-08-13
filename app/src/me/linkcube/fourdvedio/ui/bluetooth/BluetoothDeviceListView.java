@@ -1,8 +1,8 @@
 package me.linkcube.fourdvedio.ui.bluetooth;
 
 import me.linkcube.fourdvedio.R;
-import me.linkcube.fourdvedio.bluetooth.OnDeviceItemClickListener;
-import me.linkcube.fourdvedio.widget.ViewUtils;
+import me.linkcube.fourdvedio.core.bluetooth.OnDeviceItemClickListener;
+import me.linkcube.fourdvedio.utils.ViewUtils;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.util.AttributeSet;

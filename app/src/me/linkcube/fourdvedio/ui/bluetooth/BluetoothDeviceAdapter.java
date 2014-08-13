@@ -1,7 +1,7 @@
 package me.linkcube.fourdvedio.ui.bluetooth;
 
 import me.linkcube.fourdvedio.R;
-import me.linkcube.fourdvedio.bluetooth.DeviceConnectionManager;
+import me.linkcube.fourdvedio.core.bluetooth.DeviceConnectionManager;
 import me.linkcube.fourdvedio.ui.BaseListAdapter;
 import me.linkcube.fourdvedio.utils.Const;
 import android.bluetooth.BluetoothDevice;

@@ -1,9 +1,9 @@
-package me.linkcube.fourdvedio.bluetooth;
+package me.linkcube.fourdvedio.core.bluetooth;
 
 import static android.bluetooth.BluetoothAdapter.ACTION_DISCOVERY_FINISHED;
 import static android.bluetooth.BluetoothAdapter.ACTION_STATE_CHANGED;
 import static android.bluetooth.BluetoothDevice.ACTION_BOND_STATE_CHANGED;
-import static me.linkcube.fourdvedio.bluetooth.BluetoothConst.DEVICE_DEFAULT_NAMES;
+import static me.linkcube.fourdvedio.core.bluetooth.BluetoothConst.DEVICE_DEFAULT_NAMES;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import me.linkcube.fourdvedio.bluetooth.BluetoothConst.TOY_TYPE;
+import me.linkcube.fourdvedio.core.bluetooth.BluetoothConst.TOY_TYPE;
 import me.linkcube.fourdvedio.utils.Timber;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;

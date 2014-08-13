@@ -2,21 +2,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="${relativePackage}.${activityClass}" >
+    android:background="@drawable/voice_mode_bg" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
+    <me.linkcube.fourdvedio.widget.SingleStatusBarView
+        android:id="@+id/status_bar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="@dimen/StatusBarMargin"
+        android:layout_marginRight="@dimen/StatusBarMargin"
+        android:layout_marginTop="@dimen/StatusBarMargin" >
+    </me.linkcube.fourdvedio.widget.SingleStatusBarView>
 
     <Button
         android:id="@+id/test_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="17dp"
-        android:text="Button" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/status_bar"
+        android:layout_marginBottom="80dp"
+        android:layout_marginRight="16dp"
+        android:text="Button"
+        android:visibility="gone" />
+
+    <me.linkcube.fourdvedio.widget.VoiceModeView
+        android:id="@+id/voice_mode_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp" >
+    </me.linkcube.fourdvedio.widget.VoiceModeView>
 
 </RelativeLayout>

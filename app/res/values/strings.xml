@@ -34,5 +34,8 @@
     <string name="toast_connect_toy_failure">连接玩具失败，请确认玩具是否打开!</string>
     <string name="toast_bond_toy_success">玩具配对成功!</string>
     <string name="toast_toy_disconnect_pls_set">玩具未连接，请点击右上角设置</string>
+    
+    <!-- 玩具操作模式 -->
+    <string name="voice_mode">音乐模式</string>
 
 </resources>

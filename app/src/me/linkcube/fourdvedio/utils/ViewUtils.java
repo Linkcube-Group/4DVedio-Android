@@ -1,4 +1,4 @@
-package me.linkcube.fourdvedio.widget;
+package me.linkcube.fourdvedio.utils;
 
 import android.view.View;
 

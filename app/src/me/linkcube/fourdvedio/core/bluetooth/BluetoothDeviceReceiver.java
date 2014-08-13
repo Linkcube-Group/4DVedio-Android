@@ -1,4 +1,4 @@
-package me.linkcube.fourdvedio.bluetooth;
+package me.linkcube.fourdvedio.core.bluetooth;
 
 import static android.bluetooth.BluetoothAdapter.EXTRA_STATE;
 import me.linkcube.fourdvedio.utils.Timber;
