@@ -4,6 +4,7 @@ import me.linkcube.fourdvedio.R;
 import me.linkcube.fourdvedio.core.bluetooth.DeviceConnectionManager;
 import me.linkcube.fourdvedio.ui.listener.ModeControlListener;
 import android.content.Context;
+import android.media.AudioManager;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 public class VoiceModeView extends RelativeLayout {
 	
@@ -21,6 +23,8 @@ public class VoiceModeView extends RelativeLayout {
 	private int level = 0;
 
 	private ModeControlListener mListener;
+	
+	private boolean isRegisterReceiver=false;
 
 	public VoiceModeView(Context context) {
 		super(context);
@@ -50,26 +54,34 @@ public class VoiceModeView extends RelativeLayout {
 
 		@Override
 		public void onClick(View v) {
-			/*try {
+			try {
 				if (!DeviceConnectionManager.getInstance().isConnected()) {
-					mListener.showConnectBluetoothTip();
-					return;
+					//mListener.showConnectBluetoothTip();
+					Toast.makeText(context, "连接连酷玩具感受更棒的4D效果！", Toast.LENGTH_SHORT).show();
+					if(!isRegisterReceiver){
+						mListener.registerModifyAudioSettingReceiver();
+					}
+					isRegisterReceiver=true;
+					//return;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				return;
-			}*/
+			}
+			
+			AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+			boolean isHeadsetOn = audioManager.isWiredHeadsetOn();
 			switch (level) {
 			case 0:
 				level = 2;
 				mListener.showOpenMusicPlayerDialog();
 				modeBtn.setBackgroundResource(R.drawable.voice_mode_4);
-				mListener.onVoiceMode(level);
+				mListener.onVoiceMode(level,isHeadsetOn);
 				break;
 			case 2:
 				level = 0;
 				modeBtn.setBackgroundResource(R.drawable.voice_mode_0);
-				mListener.offVoiceMode(level);
+				mListener.offVoiceMode(level,isHeadsetOn);
 				break;
 			default:
 				break;

@@ -3,9 +3,6 @@ package me.linkcube.fourdvedio.ui;
 import java.io.Serializable;
 
 import me.linkcube.fourdvedio.R;
-import me.linkcube.fourdvedio.R.drawable;
-import me.linkcube.fourdvedio.R.id;
-import me.linkcube.fourdvedio.R.layout;
 import me.linkcube.fourdvedio.utils.Timber;
 import android.app.Activity;
 import android.content.Context;
@@ -14,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.LayoutParams;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -29,6 +27,7 @@ import android.widget.TextView;
  */
 public abstract class BaseActivity extends ActionBarActivity {
 
+	private String TAG=getClass().getSimpleName();
 	protected Activity mActivity = this;
 	protected View actionbarView = null;
 
@@ -107,8 +106,8 @@ public abstract class BaseActivity extends ActionBarActivity {
 
 	@Override
 	protected void onDestroy() {
+		Log.d(TAG,"onDestroy");
 		super.onDestroy();
-		Timber.d("onDestroy");
 	}
 
 	@Override
@@ -116,8 +115,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 		super.onPause();
 		//MobclickAgent.onPageEnd(this.getClass().getName());
 		//MobclickAgent.onPause(this);
-		Timber.d(this.getClass().getName());
-		Timber.d("onPause");
+		Log.d(TAG,"onPause");
 	}
 
 	@Override
@@ -125,20 +123,19 @@ public abstract class BaseActivity extends ActionBarActivity {
 		super.onResume();
 		//MobclickAgent.onPageStart(this.getClass().getName());
 		//MobclickAgent.onResume(this);
-		Timber.d(this.getClass().getName());
-		Timber.d("onResume");
+		Log.d(TAG,"onResume");
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		Timber.d("onStart");
+		Log.d(TAG,"onStart");
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		Timber.d("onStop");
+		Log.d(TAG,"onStop");
 	}
 	
 }

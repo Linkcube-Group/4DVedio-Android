@@ -291,6 +291,7 @@ public class BluetoothSettingActivity extends DialogActivity implements
 				PreferenceUtils.setString(DEVICE_NAME, mDevice.getName());
 				PreferenceUtils.setString(DEVICE_ADDRESS, mDevice.getAddress());
 				deviceAdapter.notifyDataSetChanged();
+				sendBroadcast(new Intent("me.linkcube.toyconnected"));
 			} else {
 				AlertUtils.showToast(
 						mActivity,
