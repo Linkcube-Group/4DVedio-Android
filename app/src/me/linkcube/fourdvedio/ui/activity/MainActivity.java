@@ -177,7 +177,7 @@ public class MainActivity extends BaseActivity implements
 		public void handleMessage(Message msg) {
 			int micSound = msg.what;
 			Log.d("micHandler", "micSound:" + micSound);
-			mobileVibrator(micSound*15);
+			mobileVibrator(micSound*14);
 			try {
 				FourDVedioApplication.toyServiceCall.setMicWave(micSound);
 			} catch (RemoteException e) {
@@ -240,7 +240,7 @@ public class MainActivity extends BaseActivity implements
 	public void mobileVibrator(int sound) {
 		if (!DeviceConnectionManager.getInstance().isConnected()) {
 			if(sound>300)
-			vibrator.vibrate(100);
+			vibrator.vibrate(1000);
 		} else {
 			vibrator.cancel();
 		}
