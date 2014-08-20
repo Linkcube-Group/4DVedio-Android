@@ -27,6 +27,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.os.Vibrator;
 import android.util.Log;
+import android.widget.TextView;
 
 public class MainActivity extends BaseActivity implements
 		OnSingleStatusBarClickListener, ModeControlListener {
@@ -40,6 +41,8 @@ public class MainActivity extends BaseActivity implements
 	private VoiceSensor mVoiceSensor;
 
 	private ModifyAudioSettingReceiver modifyAudioSettingReceiver;
+	
+	private TextView micSoundTv;
 
 	private Vibrator vibrator = null;
 
@@ -86,6 +89,8 @@ public class MainActivity extends BaseActivity implements
 		vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
 		modifyAudioSettingReceiver = new ModifyAudioSettingReceiver();
 		mVoiceSensor.setSoundListener(this);
+		
+		micSoundTv=(TextView)findViewById(R.id.mic_sound_tv);
 	}
 
 	@Override
@@ -177,7 +182,8 @@ public class MainActivity extends BaseActivity implements
 		public void handleMessage(Message msg) {
 			int micSound = msg.what;
 			Log.d("micHandler", "micSound:" + micSound);
-			mobileVibrator(micSound*14);
+			micSoundTv.setText(micSound+"");
+			mobileVibrator(micSound*13);
 			try {
 				FourDVedioApplication.toyServiceCall.setMicWave(micSound);
 			} catch (RemoteException e) {

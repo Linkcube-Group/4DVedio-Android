@@ -33,4 +33,13 @@
         android:layout_marginBottom="30dp" >
     </me.linkcube.fourdvedio.widget.VoiceModeView>
 
+    <TextView
+        android:id="@+id/mic_sound_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/status_bar"
+        android:layout_below="@+id/status_bar"
+        android:layout_margin="30dp"
+        android:textSize="22sp"/>
+
 </RelativeLayout>
