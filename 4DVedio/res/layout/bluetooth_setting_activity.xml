@@ -56,7 +56,7 @@
 
     <View style="@style/Setting.Item.Divider" />
 
-    <me.linkcube.fourdvedio.ui.bluetooth.BluetoothDeviceListView
+    <me.linkcube.FourDVedio.ui.bluetooth.BluetoothDeviceListView
         android:id="@id/device_lv"
         style="@style/ListView"
         android:layout_height="0dp"
