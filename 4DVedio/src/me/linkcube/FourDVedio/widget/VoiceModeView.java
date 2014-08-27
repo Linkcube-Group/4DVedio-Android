@@ -100,5 +100,10 @@ public class VoiceModeView extends RelativeLayout {
 		}
 
 	};
+	
+	public void resetView(){
+		level = 0;
+		modeBtn.setBackgroundResource(R.drawable.voice_mode_0);
+	}
 
 }

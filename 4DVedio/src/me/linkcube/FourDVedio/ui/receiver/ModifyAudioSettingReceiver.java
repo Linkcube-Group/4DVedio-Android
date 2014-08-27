@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -25,6 +26,9 @@ public class ModifyAudioSettingReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		isAppRunInBackground = false;
+		Log.d("ModifyAudioSettingReceiver", isAppRunInBackground + "----"
+				+ isOnVoiceMode);
 		String action = intent.getAction();
 		if (action.equals("android.intent.action.HEADSET_PLUG")) {
 			if (!isAppRunInBackground && isOnVoiceMode) {
@@ -39,10 +43,12 @@ public class ModifyAudioSettingReceiver extends BroadcastReceiver {
 				}
 			}
 		} else if (action.equals("me.linkcube.toyconnected")) {
-			AudioManager audioManager = (AudioManager) context
-					.getSystemService(Context.AUDIO_SERVICE);
-			boolean isHeadsetOn = audioManager.isWiredHeadsetOn();
-			modifyAudioSettingListener.onVoiceMode(2, isHeadsetOn);
+			if (!isAppRunInBackground && isOnVoiceMode) {
+				AudioManager audioManager = (AudioManager) context
+						.getSystemService(Context.AUDIO_SERVICE);
+				boolean isHeadsetOn = audioManager.isWiredHeadsetOn();
+				modifyAudioSettingListener.onVoiceMode(2, isHeadsetOn);
+			}
 		}
 
 	}

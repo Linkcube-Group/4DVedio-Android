@@ -3,6 +3,7 @@ package me.linkcube.FourDVedio.ui.activity;
 import me.linkcube.FourDVedio.FourDVedioApplication;
 import me.linkcube.FourDVedio.R;
 import me.linkcube.FourDVedio.core.bluetooth.DeviceConnectionManager;
+import me.linkcube.FourDVedio.core.bluetooth.DeviceConnectionManager.CheckConnectionCallback;
 import me.linkcube.FourDVedio.core.voice.AudioRecorder;
 import me.linkcube.FourDVedio.core.voice.VoiceSensor;
 import me.linkcube.FourDVedio.service.ToyServiceConnection;
@@ -20,14 +21,18 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends BaseActivity implements
 		OnSingleStatusBarClickListener, ModeControlListener {
@@ -41,10 +46,12 @@ public class MainActivity extends BaseActivity implements
 	private VoiceSensor mVoiceSensor;
 
 	private ModifyAudioSettingReceiver modifyAudioSettingReceiver;
-	
+
 	private TextView micSoundTv;
 
 	private Vibrator vibrator = null;
+
+	private Button connevtToyBtn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +62,9 @@ public class MainActivity extends BaseActivity implements
 
 		initView();
 
+		CheckDeviceConnect();
 	}
-	
+
 	@Override
 	protected void onResume() {
 		modifyAudioSettingReceiver.setAppRunInBackground(false);
@@ -65,11 +73,8 @@ public class MainActivity extends BaseActivity implements
 
 	@Override
 	protected void onStop() {
-		modifyAudioSettingReceiver.setAppRunInBackground(true);
 		super.onStop();
 	}
-
-
 
 	private void bindToyService() {
 		toyServiceConnection = new ToyServiceConnection();
@@ -89,9 +94,57 @@ public class MainActivity extends BaseActivity implements
 		vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
 		modifyAudioSettingReceiver = new ModifyAudioSettingReceiver();
 		mVoiceSensor.setSoundListener(this);
-		
-		micSoundTv=(TextView)findViewById(R.id.mic_sound_tv);
+		micSoundTv = (TextView) findViewById(R.id.mic_sound_tv);
+		connevtToyBtn = (Button) findViewById(R.id.connect_indicator_btn);
+		connevtToyBtn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showBluetoothSettingActivity();
+			}
+		});
 	}
+
+	private void CheckDeviceConnect() {
+		DeviceConnectionManager.getInstance().setCheckConnectionCallBack(
+				new CheckConnectionCallback() {
+
+					@Override
+					public void stable() {
+						Log.d("CheckConnectionCallback", "stable");
+					}
+
+					@Override
+					public void interrupted() {
+						Log.d("CheckConnectionCallback", "interrupted");
+						checkDeviceHandler.sendEmptyMessage(0);
+					}
+
+					@Override
+					public void disconnect() {
+						Log.d("CheckConnectionCallback", "disconnect");
+					}
+				});
+
+	}
+
+	private Handler checkDeviceHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			try {
+				FourDVedioApplication.toyServiceCall.closeToy();
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+			offVoiceMode(2, true);
+			voiceModeView.resetView();
+			Toast.makeText(MainActivity.this,
+					R.string.toast_toy_disconnect_try_again, Toast.LENGTH_SHORT)
+					.show();
+		}
+
+	};
 
 	@Override
 	public void showBluetoothSettingActivity() {
@@ -126,15 +179,15 @@ public class MainActivity extends BaseActivity implements
 
 	@Override
 	public void onVoiceMode(int level, boolean headsetOn) {
-		
+
 		mobileVibrator(0);
 		if (headsetOn) {
-			Log.d("onVoiceMode","开启音浪模式--注册声音传感器");
+			Log.d("onVoiceMode", "开启音浪模式--注册声音传感器");
 			AudioRecorder.getInstance().stopAudioRecorder();
 			registerVoiceSensor();
 			mVoiceSensor.setVoiceLevel(level);
 		} else {
-			Log.d("onVoiceMode","开启音浪模式--注册声音传感器---拔出耳机");
+			Log.d("onVoiceMode", "开启音浪模式--注册声音传感器---拔出耳机");
 			if (mVoiceSensor != null) {
 				mVoiceSensor.unregisterVoiceListener();
 			}
@@ -159,7 +212,7 @@ public class MainActivity extends BaseActivity implements
 
 	@Override
 	public void offVoiceMode(int level, boolean headsetOn) {
-		Log.d("offVoiceMode","关闭音浪模式--注销声音传感器");
+		Log.d("offVoiceMode", "关闭音浪模式--注销声音传感器");
 		vibrator.cancel();
 		if (headsetOn) {
 			if (mVoiceSensor != null) {
@@ -171,8 +224,8 @@ public class MainActivity extends BaseActivity implements
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
-			AudioRecorder.getInstance().stopAudioRecorder();
 		}
+		AudioRecorder.getInstance().stopAudioRecorder();
 		modifyAudioSettingReceiver.setOnVoiceMode(false);
 	}
 
@@ -182,8 +235,8 @@ public class MainActivity extends BaseActivity implements
 		public void handleMessage(Message msg) {
 			int micSound = msg.what;
 			Log.d("micHandler", "micSound:" + micSound);
-			micSoundTv.setText(micSound+"");
-			mobileVibrator(micSound*13);
+			micSoundTv.setText(micSound + "");
+			mobileVibrator(micSound * 13);
 			try {
 				FourDVedioApplication.toyServiceCall.setMicWave(micSound);
 			} catch (RemoteException e) {
@@ -191,8 +244,6 @@ public class MainActivity extends BaseActivity implements
 			}
 		}
 	};
-	
-	
 
 	@Override
 	public void showConnectBluetoothTip() {
@@ -245,8 +296,8 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void mobileVibrator(int sound) {
 		if (!DeviceConnectionManager.getInstance().isConnected()) {
-			if(sound>300)
-			vibrator.vibrate(1000);
+			if (sound > 300)
+				vibrator.vibrate(1000);
 		} else {
 			vibrator.cancel();
 		}

@@ -18,6 +18,7 @@
     <string name="bonded">已配对未连接</string>
     <string name="bonding">正在配对</string>
     <string name="unbond">未配对</string>
+    <string name="toast_toy_disconnect_try_again">玩具已断开，请重新连接</string>
 
     <!-- Toast-蓝牙设置 -->
     <string name="dialog_bonding_bluetooth">正在绑定玩具...</string>

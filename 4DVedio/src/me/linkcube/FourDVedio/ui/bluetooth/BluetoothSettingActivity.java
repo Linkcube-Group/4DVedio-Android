@@ -1,11 +1,15 @@
 package me.linkcube.FourDVedio.ui.bluetooth;
 
+import static me.linkcube.FourDVedio.utils.Const.Device.DEVICE_ADDRESS;
+import static me.linkcube.FourDVedio.utils.Const.Device.DEVICE_NAME;
+
 import java.util.List;
 
 import me.linkcube.FourDVedio.FourDVedioApplication;
 import me.linkcube.FourDVedio.R;
 import me.linkcube.FourDVedio.core.bluetooth.BluetoothDeviceReceiver;
 import me.linkcube.FourDVedio.core.bluetooth.BluetoothUtils;
+import me.linkcube.FourDVedio.core.bluetooth.DeviceConnectionManager;
 import me.linkcube.FourDVedio.core.bluetooth.OnBluetoothDeviceListener;
 import me.linkcube.FourDVedio.core.bluetooth.OnDeviceItemClickListener;
 import me.linkcube.FourDVedio.ui.DialogActivity;
@@ -24,8 +28,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
-import static me.linkcube.FourDVedio.utils.Const.Device.DEVICE_NAME;
-import static me.linkcube.FourDVedio.utils.Const.Device.DEVICE_ADDRESS;
 
 public class BluetoothSettingActivity extends DialogActivity implements
 		OnClickListener, OnDeviceItemClickListener, OnBluetoothDeviceListener {
@@ -282,6 +284,7 @@ public class BluetoothSettingActivity extends DialogActivity implements
 			Timber.d("连接设备完毕");
 			dismissProgressDialog();
 			if (success) {
+				DeviceConnectionManager.getInstance().startCheckConnetionTask();
 				AlertUtils.showToast(
 						mActivity,
 						getResources().getString(
