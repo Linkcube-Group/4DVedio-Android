@@ -1,14 +1,10 @@
 package me.linkcube.FourDVedio.ui.receiver;
 
 import me.linkcube.FourDVedio.ui.listener.ModeControlListener;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
-import android.support.v7.app.ActionBar;
-import android.util.Log;
-import android.widget.Toast;
 
 /**
  * 接受耳机插拔的广播
@@ -27,8 +23,6 @@ public class ModifyAudioSettingReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		isAppRunInBackground = false;
-		Log.d("ModifyAudioSettingReceiver", isAppRunInBackground + "----"
-				+ isOnVoiceMode);
 		String action = intent.getAction();
 		if (action.equals("android.intent.action.HEADSET_PLUG")) {
 			if (!isAppRunInBackground && isOnVoiceMode) {

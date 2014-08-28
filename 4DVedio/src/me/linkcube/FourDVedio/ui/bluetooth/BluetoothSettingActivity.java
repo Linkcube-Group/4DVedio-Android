@@ -1,8 +1,5 @@
 package me.linkcube.FourDVedio.ui.bluetooth;
 
-import static me.linkcube.FourDVedio.utils.Const.Device.DEVICE_ADDRESS;
-import static me.linkcube.FourDVedio.utils.Const.Device.DEVICE_NAME;
-
 import java.util.List;
 
 import me.linkcube.FourDVedio.FourDVedioApplication;
@@ -28,13 +25,15 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
+import static me.linkcube.FourDVedio.utils.Const.Device.DEVICE_NAME;
+import static me.linkcube.FourDVedio.utils.Const.Device.DEVICE_ADDRESS;
 
 public class BluetoothSettingActivity extends DialogActivity implements
 		OnClickListener, OnDeviceItemClickListener, OnBluetoothDeviceListener {
 
 	private ToggleButton bluetoothTb;
 
-	private Button discoverDevicesBtn,bluetoothHelpBtn;
+	private Button discoverDevicesBtn, bluetoothHelpBtn;
 
 	private BluetoothDeviceListView deviceLv;
 
@@ -267,7 +266,7 @@ public class BluetoothSettingActivity extends DialogActivity implements
 		protected Boolean doInBackground(BluetoothDevice... params) {
 			Timber.d("正在连接设备");
 			boolean success = false;
-			Timber.d("mDevice.getName():"+mDevice.getName());
+			Timber.d("mDevice.getName():" + mDevice.getName());
 			try {
 				success = FourDVedioApplication.toyServiceCall.connectToy(
 						mDevice.getName(), mDevice.getAddress());

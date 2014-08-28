@@ -27,11 +27,10 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.os.Vibrator;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class MainActivity extends BaseActivity implements
@@ -47,11 +46,13 @@ public class MainActivity extends BaseActivity implements
 
 	private ModifyAudioSettingReceiver modifyAudioSettingReceiver;
 
-	private TextView micSoundTv;
-
 	private Vibrator vibrator = null;
-
-	private Button connevtToyBtn;
+	// 手机震动
+	private ImageButton mobileShake;
+	// 玩具震动
+	private ImageButton toyShake;
+	private ImageView shakeMode;
+	private ImageView shakemode_txt;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +74,7 @@ public class MainActivity extends BaseActivity implements
 
 	@Override
 	protected void onStop() {
+		// modifyAudioSettingReceiver.setAppRunInBackground(true);
 		super.onStop();
 	}
 
@@ -90,61 +92,66 @@ public class MainActivity extends BaseActivity implements
 		statusBarView.setOnSingleStatusBarClickListener(this);
 		voiceModeView = (VoiceModeView) findViewById(R.id.voice_mode_view);
 		voiceModeView.setOnModeControlListener(this);
+		mobileShake = (ImageButton) findViewById(R.id.mobileShake_bt);
+		toyShake = (ImageButton) findViewById(R.id.toyShake_bt);
+		// shakeMode=(ImageView)findViewById(R.id.shakemode);
+		shakemode_txt = (ImageView) findViewById(R.id.shakemode_txt);
+		mobileShake.setOnClickListener(myClickListener);
+
+		toyShake.setOnClickListener(myClickListener);
+		// 给shakeMode注册相应事件
+		// to-do
+		// 设置背景色,以示区分
+		// mobileShake.setBackgroundColor(getResources().getColor(R.color.light_grey));
+
 		mVoiceSensor = new VoiceSensor();
 		vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
 		modifyAudioSettingReceiver = new ModifyAudioSettingReceiver();
 		mVoiceSensor.setSoundListener(this);
-		micSoundTv = (TextView) findViewById(R.id.mic_sound_tv);
-		connevtToyBtn = (Button) findViewById(R.id.connect_indicator_btn);
-		connevtToyBtn.setOnClickListener(new View.OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				showBluetoothSettingActivity();
-			}
-		});
+		// micSoundTv=(TextView)findViewById(R.id.mic_sound_tv);
 	}
 
-	private void CheckDeviceConnect() {
-		DeviceConnectionManager.getInstance().setCheckConnectionCallBack(
-				new CheckConnectionCallback() {
-
-					@Override
-					public void stable() {
-						Log.d("CheckConnectionCallback", "stable");
-					}
-
-					@Override
-					public void interrupted() {
-						Log.d("CheckConnectionCallback", "interrupted");
-						checkDeviceHandler.sendEmptyMessage(0);
-					}
-
-					@Override
-					public void disconnect() {
-						Log.d("CheckConnectionCallback", "disconnect");
-					}
-				});
-
-	}
-
-	private Handler checkDeviceHandler = new Handler() {
+	OnClickListener myClickListener = new OnClickListener() {
 
 		@Override
-		public void handleMessage(Message msg) {
-			try {
-				FourDVedioApplication.toyServiceCall.closeToy();
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}
-			offVoiceMode(2, true);
-			voiceModeView.resetView();
-			Toast.makeText(MainActivity.this,
-					R.string.toast_toy_disconnect_try_again, Toast.LENGTH_SHORT)
-					.show();
-		}
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			switch (v.getId()) {
+			case R.id.mobileShake_bt:
+				voiceModeView.changeViewBg(true);
+				mobileShakeClick();
+				break;
+			case R.id.toyShake_bt:
+				if (DeviceConnectionManager.getInstance().isConnected()) {
+					voiceModeView.changeViewBg(false);
+					toyShakeClick();
+				} else {
+					Toast.makeText(MainActivity.this, "请连接连酷玩具感受更棒的4D效果！",
+							Toast.LENGTH_SHORT).show();
+				}
+				break;
 
+			default:
+				break;
+			}
+		}
 	};
+
+	private void mobileShakeClick() {
+		mobileShake.setBackground(getResources().getDrawable(
+				R.drawable.mobileshake_grey));
+		toyShake.setBackground(getResources().getDrawable(R.drawable.toyshake));
+		shakemode_txt.setBackgroundResource(R.drawable.mobilemode_txt);
+	}
+
+	private void toyShakeClick() {
+		mobileShake.setBackground(getResources().getDrawable(
+				R.drawable.mobileshake));
+		toyShake.setBackground(getResources().getDrawable(
+				R.drawable.toyshake_grey));
+		shakemode_txt.setBackgroundResource(R.drawable.toyshake_txt);
+	}
 
 	@Override
 	public void showBluetoothSettingActivity() {
@@ -235,7 +242,6 @@ public class MainActivity extends BaseActivity implements
 		public void handleMessage(Message msg) {
 			int micSound = msg.what;
 			Log.d("micHandler", "micSound:" + micSound);
-			micSoundTv.setText(micSound + "");
 			mobileVibrator(micSound * 13);
 			try {
 				FourDVedioApplication.toyServiceCall.setMicWave(micSound);
@@ -302,5 +308,45 @@ public class MainActivity extends BaseActivity implements
 			vibrator.cancel();
 		}
 	}
+
+	private void CheckDeviceConnect() {
+		DeviceConnectionManager.getInstance().setCheckConnectionCallBack(
+				new CheckConnectionCallback() {
+
+					@Override
+					public void stable() {
+						Log.d("CheckConnectionCallback", "stable");
+					}
+
+					@Override
+					public void interrupted() {
+						Log.d("CheckConnectionCallback", "interrupted");
+						checkDeviceHandler.sendEmptyMessage(0);
+					}
+
+					@Override
+					public void disconnect() {
+						Log.d("CheckConnectionCallback", "disconnect");
+					}
+				});
+	}
+
+	private Handler checkDeviceHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			try {
+				FourDVedioApplication.toyServiceCall.closeToy();
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+			offVoiceMode(2, true);
+			voiceModeView.resetView();
+			Toast.makeText(MainActivity.this,
+					R.string.toast_toy_disconnect_try_again, Toast.LENGTH_SHORT)
+					.show();
+		}
+
+	};
 
 }

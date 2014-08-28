@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class VoiceModeView extends RelativeLayout {
-	
+
 	private Context context;
 
 	private Button modeBtn;
@@ -23,18 +23,18 @@ public class VoiceModeView extends RelativeLayout {
 	private int level = 0;
 
 	private ModeControlListener mListener;
-	
-	private boolean isRegisterReceiver=false;
+
+	private boolean isRegisterReceiver = false;
 
 	public VoiceModeView(Context context) {
 		super(context);
-		this.context=context;
+		this.context = context;
 		init();
 	}
 
 	public VoiceModeView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		this.context=context;
+		this.context = context;
 		init();
 	}
 
@@ -54,56 +54,77 @@ public class VoiceModeView extends RelativeLayout {
 
 		@Override
 		public void onClick(View v) {
-			try {
-				if (!DeviceConnectionManager.getInstance().isConnected()) {
-					//mListener.showConnectBluetoothTip();
-					Toast.makeText(context, "连接连酷玩具感受更棒的4D效果！", Toast.LENGTH_SHORT).show();
-					if(!isRegisterReceiver){
-						mListener.registerModifyAudioSettingReceiver();
-					}
-					isRegisterReceiver=true;
-					//return;
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				return;
-			}
-			
-			AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-			boolean isHeadsetOn = audioManager.isWiredHeadsetOn();
-			switch (level) {
-			case 0:
-				level = 2;
-				mListener.showOpenMusicPlayerDialog();
-				modeBtn.setBackgroundResource(R.drawable.voice_mode_4);
-				mListener.onVoiceMode(level,isHeadsetOn);
-				break;
-			case 2:
-				level = 0;
-				modeBtn.setBackgroundResource(R.drawable.voice_mode_0);
-				mListener.offVoiceMode(level,isHeadsetOn);
-				break;
-			default:
-				break;
-			}
-
+			updateView();
 		}
 	};
 
+	private void updateView() {
+		try {
+			if (!DeviceConnectionManager.getInstance().isConnected()) {
+				// mListener.showConnectBluetoothTip();
+				if (!isRegisterReceiver) {
+					mListener.registerModifyAudioSettingReceiver();
+				}
+				isRegisterReceiver = true;
+				// return;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+
+		AudioManager audioManager = (AudioManager) context
+				.getSystemService(Context.AUDIO_SERVICE);
+		boolean isHeadsetOn = audioManager.isWiredHeadsetOn();
+		switch (level) {
+		case 0:
+			level = 2;
+			mListener.showOpenMusicPlayerDialog();
+			modeBtn.setBackgroundResource(imageResources[1]);
+			mListener.onVoiceMode(level, isHeadsetOn);
+			break;
+		case 2:
+			level = 0;
+			modeBtn.setBackgroundResource(imageResources[0]);
+			mListener.offVoiceMode(level, isHeadsetOn);
+			break;
+		default:
+			break;
+		}
+
+	}
 
 	private Handler resetViewHandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
 			level = 0;
-			modeBtn.setBackgroundResource(R.drawable.voice_mode_0);
+			modeBtn.setBackgroundResource(imageResources[0]);
 		}
 
 	};
-	
-	public void resetView(){
+
+	private int[] imageResources = { 0, 0 };
+
+	public void changeViewBg(boolean isMobileMode) {
+		if (isMobileMode) {
+			imageResources[0] = R.drawable.mobile_shake_normal;
+			imageResources[1] = R.drawable.mobile_shake_pressed;
+		} else {
+			imageResources[0] = R.drawable.toy_shake_normal;
+			imageResources[1] = R.drawable.toy_shake_pressed;
+		}
+		if (level == 0)
+			level = 2;
+		else {
+			level = 0;
+		}
+		updateView();
+	}
+
+	public void resetView() {
 		level = 0;
-		modeBtn.setBackgroundResource(R.drawable.voice_mode_0);
+		modeBtn.setBackgroundResource(imageResources[0]);
 	}
 
 }
