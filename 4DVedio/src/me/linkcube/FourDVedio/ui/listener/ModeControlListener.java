@@ -40,4 +40,6 @@ public interface ModeControlListener {
 	 * 注册监听耳机是否连接广播
 	 */
 	void registerModifyAudioSettingReceiver();
+	
+	void openBlutToothSetting();
 }

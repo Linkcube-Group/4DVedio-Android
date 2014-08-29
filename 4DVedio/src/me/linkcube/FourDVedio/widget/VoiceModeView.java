@@ -54,7 +54,8 @@ public class VoiceModeView extends RelativeLayout {
 
 		@Override
 		public void onClick(View v) {
-			updateView();
+			//updateView();
+			mListener.openBlutToothSetting();
 		}
 	};
 
@@ -104,7 +105,7 @@ public class VoiceModeView extends RelativeLayout {
 
 	};
 
-	private int[] imageResources = { 0, 0 };
+	private int[] imageResources = { R.drawable.mobile_shake_normal, R.drawable.mobile_shake_pressed };
 
 	public void changeViewBg(boolean isMobileMode) {
 		if (isMobileMode) {
@@ -119,12 +120,16 @@ public class VoiceModeView extends RelativeLayout {
 		else {
 			level = 0;
 		}
-		updateView();
+		//updateView();
 	}
 
 	public void resetView() {
 		level = 0;
 		modeBtn.setBackgroundResource(imageResources[0]);
+	}
+	
+	public void changeViewBg(){
+		modeBtn.setBackgroundResource(R.drawable.toy_shake_pressed);
 	}
 
 }

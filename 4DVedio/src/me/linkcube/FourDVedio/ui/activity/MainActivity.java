@@ -26,8 +26,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.os.Vibrator;
+import android.provider.MediaStore.Images.ImageColumns;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -53,10 +55,14 @@ public class MainActivity extends BaseActivity implements
 	private ImageButton toyShake;
 	private ImageView shakeMode;
 	private ImageView shakemode_txt;
+	private ImageView mobile_icon_iv;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		
 		setContentView(R.layout.activity_main);
 
 		bindToyService();
@@ -69,6 +75,15 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	protected void onResume() {
 		modifyAudioSettingReceiver.setAppRunInBackground(false);
+		onVoiceMode(2, false);
+		try {
+			if (DeviceConnectionManager.getInstance().isConnected()) {
+				voiceModeView.changeViewBg();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
 		super.onResume();
 	}
 
@@ -97,6 +112,8 @@ public class MainActivity extends BaseActivity implements
 		// shakeMode=(ImageView)findViewById(R.id.shakemode);
 		shakemode_txt = (ImageView) findViewById(R.id.shakemode_txt);
 		mobileShake.setOnClickListener(myClickListener);
+		
+		mobile_icon_iv=(ImageView)findViewById(R.id.mobile_icon_iv);
 
 		toyShake.setOnClickListener(myClickListener);
 		// 给shakeMode注册相应事件
@@ -123,13 +140,15 @@ public class MainActivity extends BaseActivity implements
 				mobileShakeClick();
 				break;
 			case R.id.toyShake_bt:
-				if (DeviceConnectionManager.getInstance().isConnected()) {
-					voiceModeView.changeViewBg(false);
-					toyShakeClick();
-				} else {
-					Toast.makeText(MainActivity.this, "请连接连酷玩具感受更棒的4D效果！",
-							Toast.LENGTH_SHORT).show();
-				}
+//				if (DeviceConnectionManager.getInstance().isConnected()) {
+//					voiceModeView.changeViewBg(false);
+//					toyShakeClick();
+//				} else {
+//					Toast.makeText(MainActivity.this, "请连接连酷玩具感受更棒的4D效果！",
+//							Toast.LENGTH_SHORT).show();
+//				}
+				voiceModeView.changeViewBg(false);
+				toyShakeClick();
 				break;
 
 			default:
@@ -139,6 +158,8 @@ public class MainActivity extends BaseActivity implements
 	};
 
 	private void mobileShakeClick() {
+		mobile_icon_iv.setVisibility(View.VISIBLE);
+		voiceModeView.setVisibility(View.GONE);
 		mobileShake.setBackground(getResources().getDrawable(
 				R.drawable.mobileshake_grey));
 		toyShake.setBackground(getResources().getDrawable(R.drawable.toyshake));
@@ -146,6 +167,8 @@ public class MainActivity extends BaseActivity implements
 	}
 
 	private void toyShakeClick() {
+		mobile_icon_iv.setVisibility(View.GONE);
+		voiceModeView.setVisibility(View.VISIBLE);
 		mobileShake.setBackground(getResources().getDrawable(
 				R.drawable.mobileshake));
 		toyShake.setBackground(getResources().getDrawable(
@@ -348,5 +371,10 @@ public class MainActivity extends BaseActivity implements
 		}
 
 	};
+
+	@Override
+	public void openBlutToothSetting() {
+		startActivity(new Intent(mActivity, BluetoothSettingActivity.class));
+	}
 
 }
