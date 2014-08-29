@@ -7,7 +7,7 @@
         android:id="@+id/voice_mode_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/toy_shake_normal"
+        android:background="@drawable/connect_toy_btn"
         android:clickable="true" />
 
 </LinearLayout>

@@ -112,8 +112,8 @@ public class VoiceModeView extends RelativeLayout {
 			imageResources[0] = R.drawable.mobile_shake_normal;
 			imageResources[1] = R.drawable.mobile_shake_pressed;
 		} else {
-			imageResources[0] = R.drawable.toy_shake_normal;
-			imageResources[1] = R.drawable.toy_shake_pressed;
+			imageResources[0] = R.drawable.connect_toy_btn_normal;
+			imageResources[1] = R.drawable.connect_toy_btn_pressed;
 		}
 		if (level == 0)
 			level = 2;
@@ -129,7 +129,7 @@ public class VoiceModeView extends RelativeLayout {
 	}
 	
 	public void changeViewBg(){
-		modeBtn.setBackgroundResource(R.drawable.toy_shake_pressed);
+		modeBtn.setBackgroundResource(R.drawable.connected_toy_btn);
 	}
 
 }
