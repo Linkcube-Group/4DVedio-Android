@@ -2,15 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_bg"
-    android:gravity="center_horizontal"
+    android:layout_gravity="center"
+    android:background="#f6f5f5"
+    android:gravity="center"
     android:orientation="vertical" >
-    
+
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="360dp"
+        android:layout_height="380dp"
         android:src="@drawable/welcome"
-        android:scaleType="centerCrop" />
+        android:paddingBottom="120dp" />
 
 </LinearLayout>

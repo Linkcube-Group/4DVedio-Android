@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">4DVedio</string>
+    <string name="app_name">4D看片</string>
     <string name="hello_world">Hello world!</string>
     <!-- 蓝牙设置 -->
     <string name="search_toy">搜索玩具</string>
