@@ -105,12 +105,12 @@ public class VoiceModeView extends RelativeLayout {
 
 	};
 
-	private int[] imageResources = { R.drawable.mobile_shake_normal, R.drawable.mobile_shake_pressed };
+	private int[] imageResources = { R.drawable.connect_toy_btn_normal, R.drawable.mobile_shake_pressed };
 
 	public void changeViewBg(boolean isMobileMode) {
 		if (isMobileMode) {
-			imageResources[0] = R.drawable.mobile_shake_normal;
-			imageResources[1] = R.drawable.mobile_shake_pressed;
+			imageResources[0] = R.drawable.connect_toy_btn_normal;
+			imageResources[1] = R.drawable.connect_toy_btn_pressed;
 		} else {
 			imageResources[0] = R.drawable.connect_toy_btn_normal;
 			imageResources[1] = R.drawable.connect_toy_btn_pressed;

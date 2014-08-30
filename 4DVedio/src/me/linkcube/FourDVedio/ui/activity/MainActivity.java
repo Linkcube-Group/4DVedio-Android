@@ -21,6 +21,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,12 +31,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.RelativeLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class MainActivity extends BaseActivity implements
-		OnSingleStatusBarClickListener, ModeControlListener {
+public class MainActivity extends BaseActivity implements OnSingleStatusBarClickListener, ModeControlListener {
 
 	private ToyServiceConnection toyServiceConnection;
 
@@ -48,6 +49,8 @@ public class MainActivity extends BaseActivity implements
 	private ModifyAudioSettingReceiver modifyAudioSettingReceiver;
 
 	private Vibrator vibrator = null;
+	
+	private RelativeLayout main_relativelayout;
 	// 手机震动
 	private ImageButton mobileShake;
 	// 玩具震动
@@ -55,13 +58,15 @@ public class MainActivity extends BaseActivity implements
 	private ImageView shakeMode;
 	private ImageView shakemode_txt;
 	private ImageView mobile_icon_iv;
+	
+	private ImageView banner_iv;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
+
 		setContentView(R.layout.activity_main);
 
 		bindToyService();
@@ -74,7 +79,6 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	protected void onResume() {
 		modifyAudioSettingReceiver.setAppRunInBackground(false);
-		onVoiceMode(2, false);
 		try {
 			if (DeviceConnectionManager.getInstance().isConnected()) {
 				voiceModeView.changeViewBg();
@@ -83,6 +87,8 @@ public class MainActivity extends BaseActivity implements
 			e.printStackTrace();
 			return;
 		}
+		onVoiceMode(2,false);
+
 		super.onResume();
 	}
 
@@ -94,8 +100,7 @@ public class MainActivity extends BaseActivity implements
 
 	private void bindToyService() {
 		toyServiceConnection = new ToyServiceConnection();
-		Intent toyintent = new Intent(this,
-				me.linkcube.FourDVedio.service.ToyService.class);
+		Intent toyintent = new Intent(this, me.linkcube.FourDVedio.service.ToyService.class);
 		this.startService(toyintent);
 		bindService(toyintent, toyServiceConnection, Context.BIND_AUTO_CREATE);
 
@@ -112,7 +117,19 @@ public class MainActivity extends BaseActivity implements
 		shakemode_txt = (ImageView) findViewById(R.id.shakemode_txt);
 		mobileShake.setOnClickListener(myClickListener);
 		
-		mobile_icon_iv=(ImageView)findViewById(R.id.mobile_icon_iv);
+		main_relativelayout=(RelativeLayout)findViewById(R.id.main_relativelayout);
+
+		mobile_icon_iv = (ImageView) findViewById(R.id.mobile_icon_iv);
+		banner_iv=(ImageView)findViewById(R.id.banner_iv);
+		banner_iv.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				Uri uri=Uri.parse("http://item.jd.com/1127528.html");
+				Intent intent=new Intent(Intent.ACTION_VIEW,uri);
+				startActivity(intent);
+			}
+		});
 
 		toyShake.setOnClickListener(myClickListener);
 		// 给shakeMode注册相应事件
@@ -139,13 +156,13 @@ public class MainActivity extends BaseActivity implements
 				mobileShakeClick();
 				break;
 			case R.id.toyShake_bt:
-//				if (DeviceConnectionManager.getInstance().isConnected()) {
-//					voiceModeView.changeViewBg(false);
-//					toyShakeClick();
-//				} else {
-//					Toast.makeText(MainActivity.this, "请连接连酷玩具感受更棒的4D效果！",
-//							Toast.LENGTH_SHORT).show();
-//				}
+				// if (DeviceConnectionManager.getInstance().isConnected()) {
+				// voiceModeView.changeViewBg(false);
+				// toyShakeClick();
+				// } else {
+				// Toast.makeText(MainActivity.this, "请连接连酷玩具感受更棒的4D效果！",
+				// Toast.LENGTH_SHORT).show();
+				// }
 				voiceModeView.changeViewBg(false);
 				toyShakeClick();
 				break;
@@ -159,20 +176,19 @@ public class MainActivity extends BaseActivity implements
 	private void mobileShakeClick() {
 		mobile_icon_iv.setVisibility(View.VISIBLE);
 		voiceModeView.setVisibility(View.GONE);
-		mobileShake.setBackground(getResources().getDrawable(
-				R.drawable.mobileshake_grey));
+		mobileShake.setBackground(getResources().getDrawable(R.drawable.mobileshake_grey));
 		toyShake.setBackground(getResources().getDrawable(R.drawable.toyshake));
 		shakemode_txt.setBackgroundResource(R.drawable.mobilemode_txt);
+		main_relativelayout.setBackgroundResource(R.drawable.mobileshake_bg);
 	}
 
 	private void toyShakeClick() {
 		mobile_icon_iv.setVisibility(View.GONE);
 		voiceModeView.setVisibility(View.VISIBLE);
-		mobileShake.setBackground(getResources().getDrawable(
-				R.drawable.mobileshake));
-		toyShake.setBackground(getResources().getDrawable(
-				R.drawable.toyshake_grey));
+		mobileShake.setBackground(getResources().getDrawable(R.drawable.mobileshake));
+		toyShake.setBackground(getResources().getDrawable(R.drawable.toyshake_grey));
 		shakemode_txt.setBackgroundResource(R.drawable.toyshake_txt);
+		main_relativelayout.setBackgroundResource(R.drawable.toyshake_bg);
 	}
 
 	@Override
@@ -220,21 +236,20 @@ public class MainActivity extends BaseActivity implements
 			if (mVoiceSensor != null) {
 				mVoiceSensor.unregisterVoiceListener();
 			}
-			AudioRecorder.getInstance().startAudioRecorder(
-					new ASmackRequestCallBack() {
+			AudioRecorder.getInstance().startAudioRecorder(new ASmackRequestCallBack() {
 
-						@Override
-						public void responseSuccess(Object object) {
-							Message msg = new Message();
-							msg.what = (Integer) object;
-							micHandler.sendMessage(msg);
-						}
+				@Override
+				public void responseSuccess(Object object) {
+					Message msg = new Message();
+					msg.what = (Integer) object;
+					micHandler.sendMessage(msg);
+				}
 
-						@Override
-						public void responseFailure(int reflag) {
+				@Override
+				public void responseFailure(int reflag) {
 
-						}
-					});
+				}
+			});
 		}
 		modifyAudioSettingReceiver.setOnVoiceMode(true);
 	}
@@ -265,21 +280,19 @@ public class MainActivity extends BaseActivity implements
 			int micSound = msg.what;
 			Log.d("micHandler", "micSound:" + micSound);
 			mobileVibrator(micSound * 13);
-			try {
-				FourDVedioApplication.toyServiceCall.setMicWave(micSound);
-			} catch (RemoteException e) {
-				e.printStackTrace();
+			if (DeviceConnectionManager.getInstance().isConnected()) {
+				try {
+					FourDVedioApplication.toyServiceCall.setMicWave(micSound);
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	};
 
 	@Override
 	public void showConnectBluetoothTip() {
-		AlertUtils
-				.showToast(
-						mActivity,
-						getResources().getString(
-								R.string.toast_toy_disconnect_pls_set));
+		AlertUtils.showToast(mActivity, getResources().getString(R.string.toast_toy_disconnect_pls_set));
 
 	}
 
@@ -332,25 +345,24 @@ public class MainActivity extends BaseActivity implements
 	}
 
 	private void CheckDeviceConnect() {
-		DeviceConnectionManager.getInstance().setCheckConnectionCallBack(
-				new CheckConnectionCallback() {
+		DeviceConnectionManager.getInstance().setCheckConnectionCallBack(new CheckConnectionCallback() {
 
-					@Override
-					public void stable() {
-						Log.d("CheckConnectionCallback", "stable");
-					}
+			@Override
+			public void stable() {
+				Log.d("CheckConnectionCallback", "stable");
+			}
 
-					@Override
-					public void interrupted() {
-						Log.d("CheckConnectionCallback", "interrupted");
-						checkDeviceHandler.sendEmptyMessage(0);
-					}
+			@Override
+			public void interrupted() {
+				Log.d("CheckConnectionCallback", "interrupted");
+				checkDeviceHandler.sendEmptyMessage(0);
+			}
 
-					@Override
-					public void disconnect() {
-						Log.d("CheckConnectionCallback", "disconnect");
-					}
-				});
+			@Override
+			public void disconnect() {
+				Log.d("CheckConnectionCallback", "disconnect");
+			}
+		});
 	}
 
 	private Handler checkDeviceHandler = new Handler() {
@@ -364,9 +376,7 @@ public class MainActivity extends BaseActivity implements
 			}
 			offVoiceMode(2, true);
 			voiceModeView.resetView();
-			Toast.makeText(MainActivity.this,
-					R.string.toast_toy_disconnect_try_again, Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(MainActivity.this, R.string.toast_toy_disconnect_try_again, Toast.LENGTH_SHORT).show();
 		}
 
 	};
