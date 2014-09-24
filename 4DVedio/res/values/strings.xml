@@ -38,5 +38,16 @@
     
     <!-- 玩具操作模式 -->
     <string name="voice_mode">音乐模式</string>
+    
+    <!-- Toast-更新-->
+	<string name="update_title">连酷</string>
+	<string name="update_download_flie">正在下载更新文件</string>
+	<string name="update_find_new_version">发现新版本</string>
+	<string name="update_now">马上更新</string>
+	<string name="update_nexttime">下次再说</string>
+	<string name="update_version_code">版本号：</string>
+	<string name="update_file_size">大小：</string>
+	<string name="update_description">描述：</string>
+	<string name="toast_network_error_download_file_failure">网络异常，文件下载失败</string>
 
 </resources>
